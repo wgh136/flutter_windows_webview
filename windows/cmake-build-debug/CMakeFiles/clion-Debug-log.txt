@@ -1,0 +1,9 @@
+C:\Users\wgh19\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\231.8770.66\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=C:/Users/wgh19/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/231.8770.66/bin/ninja/win/x64/ninja.exe -DCMAKE_GNUtoMS:BOOL=ON -G Ninja -S D:\code\flutter_windows_webview\windows -B D:\code\flutter_windows_webview\windows\cmake-build-debug
+CMake Warning (dev) at CMakeLists.txt:44 (set):
+  Cannot set "desktop_webview_window_bundled_libraries": current scope has no
+  parent.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: D:/code/flutter_windows_webview/windows/cmake-build-debug
