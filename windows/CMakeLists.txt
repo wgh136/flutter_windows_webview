@@ -40,13 +40,13 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin flutter_wrapper_app)
 
 add_library(Webview2 SHARED IMPORTED GLOBAL)
-SET_PROPERTY(TARGET Webview2 PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/libs/x64/Webview2Loader.dll)
-SET_PROPERTY(TARGET Webview2 PROPERTY IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/libs/x64/Webview2Loader.dll.lib)
+SET_PROPERTY(TARGET Webview2 PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/libs/x64/WebView2Loader.dll)
+SET_PROPERTY(TARGET Webview2 PROPERTY IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/libs/x64/WebView2Loader.dll.lib)
 
 target_link_libraries(${PLUGIN_NAME} PRIVATE Webview2)
 
 # List of absolute paths to libraries that should be bundled with the plugin
-set(desktop_webview_window_bundled_libraries
+set(flutter_windows_webview_bundled_libraries
         "$<TARGET_FILE:Webview2>"
         PARENT_SCOPE
         )
