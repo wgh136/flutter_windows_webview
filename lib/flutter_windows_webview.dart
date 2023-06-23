@@ -21,4 +21,11 @@ class FlutterWindowsWebview {
     }
     Webview.runScript(script);
   }
+
+  Future<String> getCookies(String uri){
+    if(!isRunning){
+      throw Exception("Webview is not running");
+    }
+    return Webview.getCookies(uri);
+  }
 }

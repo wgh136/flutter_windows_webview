@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 
 class Webview{
+  static void Function(String)? cookieListener;
+
   static void startWebview(String url, [WebviewOptions? options]) async{
     listen(options?.messageReceiver, options?.onTitleChange);
     var channel = const MethodChannel("flutter_windows_webview");
@@ -16,6 +18,11 @@ class Webview{
         }
         continue;
       }else if(message.length > 7 && message.substring(0, 7)=="status:"){
+        continue;
+      }else if(message.length > 7 && message.substring(0, 7)=="cookie:"){
+        if(cookieListener != null){
+          cookieListener!.call(message.substring(7));
+        }
         continue;
       }
       if(messageReceiver != null){
@@ -33,6 +40,21 @@ class Webview{
   static void runScript(String script) async{
     var channel = const MethodChannel("flutter_windows_webview");
     var res = await channel.invokeMethod("script", script);
+  }
+
+  static Future<String> getCookies(String uri) async{
+    if(cookieListener != null){
+      throw Exception("Another cookie getting session is running");
+    }
+    String? cookies;
+    cookieListener = (cookie) => cookies = cookie;
+    var channel = const MethodChannel("flutter_windows_webview");
+    await channel.invokeMethod("getCookies", uri);
+    while(cookies == null){
+      await Future.delayed(const Duration(milliseconds: 50));
+    }
+    cookieListener = null;
+    return cookies!;
   }
 }
 

@@ -237,5 +237,54 @@ bool isAvailable() {
     }
 }
 
+void getCookies(const wchar_t* uri) {
+    ICoreWebView2* webview2;
+    webviewController->get_CoreWebView2(&webview2);
+    ICoreWebView2_2* web_view2_2 = static_cast<ICoreWebView2_2*>(webview2);
+    ICoreWebView2CookieManager* m_cookieManager;
+    web_view2_2->get_CookieManager(&m_cookieManager);
+    m_cookieManager->GetCookies(
+        uri,
+        Callback<ICoreWebView2GetCookiesCompletedHandler>(
+            [uri](HRESULT error_code, ICoreWebView2CookieList* list) -> HRESULT {
 
+                std::wstring result = L"cookie:";
+                UINT cookie_list_size;
+                list->get_Count(&cookie_list_size);
+
+                if (cookie_list_size == 0)
+                {
+                    result += L"No cookies found.";
+                }
+                else
+                {
+                    result += L"[";
+                    for (UINT i = 0; i < cookie_list_size; ++i)
+                    {
+                        wil::com_ptr<ICoreWebView2Cookie> cookie;
+                        list->GetValueAtIndex(i, &cookie);
+
+                        if (cookie.get())
+                        {
+                            LPWSTR name;
+                            LPWSTR value;
+                            cookie.get()->get_Name(&name);
+                            cookie.get()->get_Name(&value);
+                            result += name;
+                            result += L":";
+                            result += value;
+                            if (i != cookie_list_size - 1)
+                            {
+                                result += L";";
+                            }
+                        }
+                    }
+                    result += L"]";
+                }
+                const char* convertedValue = flutter_windows_webview::convertWcharToUTF8(result.c_str());
+                sendMessage(convertedValue);
+                return S_OK;
+            })
+            .Get());
+}
 }

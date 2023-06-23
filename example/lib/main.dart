@@ -35,8 +35,8 @@ class _MyAppState extends State<MyApp> {
             Center(
               child: FilledButton(
                 child: const Text("2"),
-                onPressed: (){
-                  FlutterWindowsWebview().runScript("window.chrome.webview.postMessage(\"Test\")");
+                onPressed: () async{
+                  print(await _flutterWindowsWebviewPlugin.getCookies("https://www.google.com"));
                 },
               ),
             ),
