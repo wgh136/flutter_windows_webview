@@ -1,7 +1,7 @@
 name: flutter_windows_webview
-description: A new Flutter plugin project.
+description: A plugin that provides a webview interface on the flutter Windows.
 version: 0.0.1
-homepage:
+homepage: https://github.com/wgh136
 
 environment:
   sdk: '>=3.0.3 <4.0.0'

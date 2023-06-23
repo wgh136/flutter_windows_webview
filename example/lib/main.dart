@@ -22,13 +22,25 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: FilledButton(
-            child: const Text("Test"),
-            onPressed: (){
-              _flutterWindowsWebviewPlugin.launchWebview();
-            },
-          ),
+        body: Column(
+          children: [
+            Center(
+              child: FilledButton(
+                child: const Text("1"),
+                onPressed: (){
+                  _flutterWindowsWebviewPlugin.launchWebview(WebviewOptions(messageReceiver: (message) => print(message)));
+                },
+              ),
+            ),
+            Center(
+              child: FilledButton(
+                child: const Text("2"),
+                onPressed: (){
+                  FlutterWindowsWebview().runScript("alert(\"Hello World\")");
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
