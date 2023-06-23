@@ -44,9 +44,17 @@ namespace flutter_windows_webview {
         if(method == "isAvailable") {
             result->Success(Webview::isAvailable());
         }else if(method == "start") {
-            result->Success(flutter::EncodableValue("success"));
+            auto url = std::get_if<std::string>(method_call.arguments());
+            auto str = url->c_str();
+            int len = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
+            auto wstr = new wchar_t[len];
+            if (MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len) == 0) {
+                std::cerr << "Failed to convert string from multibyte to wide character.\n";
+                delete[] wstr;
+            }
             auto hwnd = Webview::createWindow();
-            Webview::createWebview(hwnd, L"https://www.google.com");
+            Webview::createWebview(hwnd, wstr);
+            result->Success(flutter::EncodableValue("success"));
         }else if(method == "script") {
             auto script = std::get_if<std::string>(method_call.arguments());
             Webview::runScript(script->c_str(), 1234566);

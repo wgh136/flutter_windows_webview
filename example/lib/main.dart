@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
               child: FilledButton(
                 child: const Text("1"),
                 onPressed: (){
-                  _flutterWindowsWebviewPlugin.launchWebview(WebviewOptions(messageReceiver: (message) => print(message)));
+                  _flutterWindowsWebviewPlugin.launchWebview("https://www.google.com", WebviewOptions(messageReceiver: (message) => print(message)));
                 },
               ),
             ),
@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
               child: FilledButton(
                 child: const Text("2"),
                 onPressed: (){
-                  FlutterWindowsWebview().runScript("alert(\"Hello World\")");
+                  FlutterWindowsWebview().runScript("window.chrome.webview.postMessage(\"Test\")");
                 },
               ),
             ),

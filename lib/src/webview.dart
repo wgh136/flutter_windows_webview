@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart';
 
 class Webview{
-  static void startWebview([WebviewOptions? options]) async{
+  static void startWebview(String url, [WebviewOptions? options]) async{
     listen(options?.messageReceiver, options?.onTitleChange);
     var channel = const MethodChannel("flutter_windows_webview");
-    var res = await channel.invokeMethod("start");
+    var res = await channel.invokeMethod("start", url);
   }
 
   static void listen(void Function(String)? messageReceiver, void Function(String)? onTitleChange) async{

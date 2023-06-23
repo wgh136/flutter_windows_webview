@@ -5,9 +5,9 @@ export 'package:flutter_windows_webview/src/webview.dart';
 class FlutterWindowsWebview {
   static bool isRunning = false;
   ///launch Webview
-  void launchWebview([WebviewOptions? options]) {
+  void launchWebview(String url, [WebviewOptions? options]) {
     isRunning = true;
-    Webview.startWebview(options);
+    Webview.startWebview(url, options);
   }
 
   ///Check if Webview is available

@@ -131,6 +131,7 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
 
                         // Schedule an async task to navigate to Bing
                         webview->Navigate(initialUri);
+                          delete[] initialUri;
                         EventRegistrationToken token;
                         webview->AddScriptToExecuteOnDocumentCreated(
                             L"window.onload = function(){"
