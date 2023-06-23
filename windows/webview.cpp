@@ -55,10 +55,10 @@ HWND createWindow(){
     window_class.hInstance = hInstance;
     window_class.lpfnWndProc = WndProc;
     
-    window_class.hIcon = LoadIcon(window_class.hInstance, IDI_APPLICATION);
+    window_class.hIcon = LoadIcon(window_class.hInstance, MAKEINTRESOURCE(101));
     window_class.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     window_class.lpszMenuName = nullptr;
-    window_class.hIconSm = LoadIcon(window_class.hInstance, IDI_APPLICATION);
+    window_class.hIconSm = LoadIcon(window_class.hInstance, MAKEINTRESOURCE(101));
     // The parameters to CreateWindow explained:
     // szWindowClass: the name of the application
     // szTitle: the text that appears in the title bar
