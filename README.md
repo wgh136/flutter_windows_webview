@@ -46,7 +46,7 @@ If you want to receive these message, you need to provide `messageReceiver` when
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-FlutterWindowsWebview().launchWebview(messageReceiver(messageReceiver: (message) => print(message)));;
+FlutterWindowsWebview().launchWebview(WebviewOptions(messageReceiver: (message) => print(message)));;
 ```
 
 ### listen title's change
@@ -54,7 +54,7 @@ You need to provide `onTitleChange` when create webview;
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-FlutterWindowsWebview().launchWebview(messageReceiver(onTitleChange: (message) => print(message)));;
+FlutterWindowsWebview().launchWebview(WebviewOptions(onTitleChange: (message) => print(message)));;
 ```
 
 ### cookies
