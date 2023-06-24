@@ -13,8 +13,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _flutterWindowsWebviewPlugin = FlutterWindowsWebview();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,7 +26,7 @@ class _MyAppState extends State<MyApp> {
               child: FilledButton(
                 child: const Text("1"),
                 onPressed: (){
-                  _flutterWindowsWebviewPlugin.launchWebview("https://www.google.com", WebviewOptions(messageReceiver: (message) => print(message)));
+                  FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(messageReceiver: (message) => print(message)));
                 },
               ),
             ),
@@ -36,7 +34,7 @@ class _MyAppState extends State<MyApp> {
               child: FilledButton(
                 child: const Text("2"),
                 onPressed: () async{
-                  print(await _flutterWindowsWebviewPlugin.getCookies("https://www.google.com"));
+                  print(await FlutterWindowsWebview.getCookies("https://www.baidu.com"));
                 },
               ),
             ),

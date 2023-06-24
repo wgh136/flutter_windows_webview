@@ -27,7 +27,7 @@ Before run script, make sure the webview is running.
 
 #### use script
 The following code show how to run script;
-```dart
+```
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.runScript("alert(\"Hello World\")");
@@ -35,7 +35,7 @@ FlutterWindowsWebview.runScript("alert(\"Hello World\")");
 
 #### send message from webview
 You can send message from webview.
-```dart
+```
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.runScript("window.chrome.webview.postMessage(\"Hello World\")");
@@ -43,7 +43,7 @@ FlutterWindowsWebview.runScript("window.chrome.webview.postMessage(\"Hello World
 
 If you want to receive these message, you need to provide `messageReceiver` when create webview;
 
-```dart
+```
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(messageReceiver: (message) => print(message)));
@@ -51,7 +51,7 @@ FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(mes
 
 ## listen title's change
 You need to provide `onTitleChange` when create webview;
-```dart
+```
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(onTitleChange: (message) => print(message)));
@@ -60,7 +60,7 @@ FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(onT
 ## cookies
 
 ### Get cookie
-```dart
+```
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 var res = FlutterWindowsWebview.getCookies("https://www.google.com"));
