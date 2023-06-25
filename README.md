@@ -1,11 +1,11 @@
 # flutter_windows_webview
 
-A plugin that provides a webview interface on the flutter Windows.
+A plugin that provides a webview interface for Flutter on Windows.
 
 ## Getting Started
 
 ### Check if webview is available
-Webview is not support all versions of Windows. Use following code to check if it is available.
+Webview is not supported on all versions of Windows. Use the following code to check if it is available.
 
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
@@ -14,7 +14,7 @@ print(FlutterWindowsWebview.isAvailable());
 ```
 
 ### Create webview
-Run following code;
+Run the following code;
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
@@ -23,25 +23,25 @@ FlutterWindowsWebview.launchWebview("https://www.google.com");
 Then the webview window will be created.
 
 ## Run script
-Before run script, make sure the webview is running.
+Before running the script, make sure the webview is running.
 
 #### use script
-The following code show how to run script;
+The following code shows how to run a script:
 ```
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.runScript("alert(\"Hello World\")");
 ```
 
-#### send message from webview
-You can send message from webview.
+#### Sending message from the webview
+You can send a message from the webview:
 ```
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.runScript("window.chrome.webview.postMessage(\"Hello World\")");
 ```
 
-If you want to receive these message, you need to provide `messageReceiver` when create webview;
+If you want to receive these messages, you need to provide a messageReceiver when creating the webview:
 
 ```
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
@@ -50,7 +50,7 @@ FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(mes
 ```
 
 ## listen title's change
-You need to provide `onTitleChange` when create webview;
+You need to provide an `onTitleChange` callback when creating the webview:
 ```
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
