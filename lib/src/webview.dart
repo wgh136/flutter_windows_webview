@@ -16,12 +16,12 @@ class Webview{
     await for(String message in channel.receiveBroadcastStream()){
       if(message.length > 15 && message.substring(0, 15)=="/r8A7g5E8dTitle"){
         if(onTitleChange!=null){
-          onTitleChange.call(message.substring(16));
+          onTitleChange.call(message.substring(15));
         }
         continue;
       }else if(message.length > 15 && message.substring(0, 15)=="/r8A7g5E8Cookie"){
         if(cookieListener != null){
-          cookieListener!.call(message.substring(16));
+          cookieListener!.call(message.substring(15));
         }
         continue;
       }else if(message.length > 15 && message.substring(0, 15)=="/r8A7g5E8Status"){
