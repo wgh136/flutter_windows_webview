@@ -27,7 +27,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_DESTROY:
         DestroyWindow(hWnd);
-        sendMessage("status: window close");
+        sendMessage("/r8A7g5E8Status window close");
         removeHandler();
         break;
     case WM_SIZE:
@@ -96,8 +96,19 @@ void messageHandler(LPCWSTR message, int code) {
 }
 
 void createWebview(HWND hWnd, const wchar_t *initialUri) {
+    const auto path = new wchar_t[256];
+    GetModuleFileNameW(nullptr, path, 256);
+    std::wstring dataPath{path};
+    for(long long i = dataPath.length();i>=0;i--) {
+        if(dataPath[i] == '\\' || dataPath[i]=='/') {
+            dataPath.erase(dataPath.begin()+i, dataPath.end());
+            break;
+        }
+    }
+    dataPath += L"/webview";
+    
     CreateCoreWebView2EnvironmentWithOptions(
-        nullptr, L"D://webviewtest", nullptr,
+        nullptr, dataPath.c_str(), nullptr,
         Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
             [hWnd, initialUri](HRESULT result,
                                ICoreWebView2Environment *env) -> HRESULT {
@@ -135,7 +146,7 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
                         EventRegistrationToken token;
                         webview->AddScriptToExecuteOnDocumentCreated(
                             L"window.onload = function(){"
-                            "window.chrome.webview.postMessage(\"title:\"+window.document."
+                            "window.chrome.webview.postMessage(\"/r8A7g5E8dTitle\"+window.document."
                             "title);"
                             "}",
                             nullptr);
@@ -147,9 +158,9 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
                                       LPWSTR message;
                                       args->TryGetWebMessageAsString(&message);
                                       sendMessage(message);
-                                      const wchar_t* flag = L"title:";
+                                      const wchar_t* flag = TitleFlag;
                                         bool changeTitle = true;
-                                        for(int i=0;i<6;i++) {
+                                        for(int i=0;i<15;i++) {
                                             if(message[i] == '\0') {
                                                 changeTitle = false;
                                                 break;
@@ -165,8 +176,8 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
                                                 length++;
                                             }
                                             wchar_t* title = new wchar_t[length-5];
-                                            for(int i=6;i<length+1;i++) {
-                                                title[i-6] = message[i];
+                                            for(int i=15;i<length+1;i++) {
+                                                title[i-15] = message[i];
                                             }
                                             SetWindowText(hWnd, title);
                                             delete[] title;
@@ -248,7 +259,7 @@ void getCookies(const wchar_t* uri) {
         Callback<ICoreWebView2GetCookiesCompletedHandler>(
             [uri](HRESULT error_code, ICoreWebView2CookieList* list) -> HRESULT {
 
-                std::wstring result = L"cookie:";
+                std::wstring result = CookieFlag;
                 UINT cookie_list_size;
                 list->get_Count(&cookie_list_size);
 

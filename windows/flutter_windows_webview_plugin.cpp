@@ -49,8 +49,8 @@ namespace flutter_windows_webview {
             int len = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
             auto wstr = new wchar_t[len];
             if (MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len) == 0) {
-                std::cerr << "Failed to convert string from multibyte to wide character.\n";
                 delete[] wstr;
+                result->Success(flutter::EncodableValue("error"));
             }
             auto hwnd = Webview::createWindow();
             Webview::createWebview(hwnd, wstr);
@@ -65,8 +65,8 @@ namespace flutter_windows_webview {
             int len = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
             auto wstr = new wchar_t[len];
             if (MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len) == 0) {
-                std::cerr << "Failed to convert string from multibyte to wide character.\n";
                 delete[] wstr;
+                result->Success(flutter::EncodableValue("error"));
             }
             Webview::getCookies(wstr);
             result->Success(flutter::EncodableValue("success"));
@@ -74,4 +74,4 @@ namespace flutter_windows_webview {
             result->Success(flutter::EncodableValue("success"));
     }
 
-}  // namespace flutter_windows_webview
+}

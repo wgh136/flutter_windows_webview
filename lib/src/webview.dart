@@ -7,25 +7,24 @@ class Webview{
   ///launch webview
   static void startWebview(String url, [WebviewOptions? options]) async{
     listen(options?.messageReceiver, options?.onTitleChange);
-    var channel = const MethodChannel("flutter_windows_webview");
-    var res = await channel.invokeMethod("start", url);
+    const MethodChannel("flutter_windows_webview");
   }
 
   ///listen message from c++
   static void listen(void Function(String)? messageReceiver, void Function(String)? onTitleChange) async{
     var channel = const EventChannel("flutter_windows_webview/message");
     await for(String message in channel.receiveBroadcastStream()){
-      if(message.length > 6 && message.substring(0, 6)=="title:"){
+      if(message.length > 15 && message.substring(0, 15)=="/r8A7g5E8dTitle"){
         if(onTitleChange!=null){
-          onTitleChange.call(message.substring(6));
+          onTitleChange.call(message.substring(16));
         }
         continue;
-      }else if(message.length > 7 && message.substring(0, 7)=="status:"){
-        continue;
-      }else if(message.length > 7 && message.substring(0, 7)=="cookie:"){
+      }else if(message.length > 15 && message.substring(0, 15)=="/r8A7g5E8Cookie"){
         if(cookieListener != null){
-          cookieListener!.call(message.substring(7));
+          cookieListener!.call(message.substring(16));
         }
+        continue;
+      }else if(message.length > 15 && message.substring(0, 15)=="/r8A7g5E8Status"){
         continue;
       }
       if(messageReceiver != null){
@@ -44,7 +43,7 @@ class Webview{
   ///run script
   static void runScript(String script) async{
     var channel = const MethodChannel("flutter_windows_webview");
-    var res = await channel.invokeMethod("script", script);
+    await channel.invokeMethod("script", script);
   }
 
   ///get cookies

@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
               child: FilledButton(
                 child: const Text("2"),
                 onPressed: () async{
-                  print(await FlutterWindowsWebview.getCookies("https://www.baidu.com"));
+                  print(await FlutterWindowsWebview.getCookies("https://www.google.com"));
                 },
               ),
             ),

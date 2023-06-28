@@ -7,6 +7,10 @@
 
 using namespace Microsoft::WRL;
 
+#define TitleFlag L"/r8A7g5E8dTitle"
+#define CookieFlag L"/r8A7g5E8Cookie"
+#define StatusFlag L"/r8A7g5E8Status"
+
 namespace Webview {
     static const wchar_t* szWindowClass= L"Webview Test class";
 
@@ -28,4 +32,4 @@ namespace Webview {
 
     void getCookies(const wchar_t* uri);
     
-} // namespace Webview
+}
