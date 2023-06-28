@@ -56,6 +56,7 @@ namespace flutter_windows_webview {
         std::unique_ptr<flutter::StreamHandlerError<>> OnCancelInternal(const flutter::EncodableValue* arguments) override
         {
             listening = false;
+            streamEvents = nullptr;
             return nullptr;
         }
 
@@ -79,7 +80,6 @@ namespace flutter_windows_webview {
             if (this == nullptr) return;
             if (!listening) return;
             streamEvents->EndOfStream();
-            streamEvents = nullptr;
             listening = false;
         }
     };

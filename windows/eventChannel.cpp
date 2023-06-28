@@ -16,12 +16,12 @@ void sendMessage(const wchar_t* message) {
 }
 
 flutter_windows_webview::WebviewStreamHandler* addHandler() {
-  handler = new flutter_windows_webview::WebviewStreamHandler;
+  if(handler == nullptr)
+    handler = new flutter_windows_webview::WebviewStreamHandler;
   return handler;
 }
 
 void removeHandler() {
     handler->closeStream();
-    handler = nullptr;
 }
 }
