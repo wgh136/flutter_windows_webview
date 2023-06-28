@@ -2,6 +2,8 @@
 
 A plugin that provides a webview interface for Flutter on Windows.
 
+Currently, this plugin only provides some basic functionality.
+
 ## Getting Started
 
 ### Check if webview is available
@@ -27,7 +29,7 @@ Before running the script, make sure the webview is running.
 
 #### use script
 The following code shows how to run a script:
-```
+```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.runScript("alert(\"Hello World\")");
@@ -35,7 +37,7 @@ FlutterWindowsWebview.runScript("alert(\"Hello World\")");
 
 #### Sending message from the webview
 You can send a message from the webview:
-```
+```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.runScript("window.chrome.webview.postMessage(\"Hello World\")");
@@ -43,7 +45,7 @@ FlutterWindowsWebview.runScript("window.chrome.webview.postMessage(\"Hello World
 
 If you want to receive these messages, you need to provide a messageReceiver when creating the webview:
 
-```
+```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(messageReceiver: (message) => print(message)));
@@ -51,7 +53,7 @@ FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(mes
 
 ## listen title's change
 You need to provide an `onTitleChange` callback when creating the webview:
-```
+```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(onTitleChange: (message) => print(message)));
@@ -60,7 +62,7 @@ FlutterWindowsWebview.launchWebview("https://www.google.com", WebviewOptions(onT
 ## cookies
 
 ### Get cookie
-```
+```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 var res = FlutterWindowsWebview.getCookies("https://www.google.com"));
