@@ -275,7 +275,7 @@ void getCookies(const wchar_t* uri) {
                             LPWSTR name;
                             LPWSTR value;
                             cookie.get()->get_Name(&name);
-                            cookie.get()->get_Name(&value);
+                            cookie.get()->get_Value(&value);
                             result += name;
                             result += L":";
                             result += value;
