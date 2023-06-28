@@ -264,7 +264,6 @@ void getCookies(const wchar_t* uri) {
                 }
                 else
                 {
-                    result += L"[";
                     for (UINT i = 0; i < cookie_list_size; ++i)
                     {
                         wil::com_ptr<ICoreWebView2Cookie> cookie;
@@ -285,7 +284,6 @@ void getCookies(const wchar_t* uri) {
                             }
                         }
                     }
-                    result += L"]";
                 }
                 const char* convertedValue = flutter_windows_webview::convertWcharToUTF8(result.c_str());
                 sendMessage(convertedValue);
