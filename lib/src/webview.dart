@@ -87,14 +87,19 @@ class FlutterWindowsWebview{
   Future<void> close() async{
     if(!isRunning)  throw Exception("Webview is not running");
     var channel = const MethodChannel("flutter_windows_webview");
-    var res = await channel.invokeMethod("close");
+    await channel.invokeMethod("close");
     isRunning = false;
   }
 
   Future<void> navigateTo(String uri) async{
     if(!isRunning)  throw Exception("Webview is not running");
     var channel = const MethodChannel("flutter_windows_webview");
-    var res = await channel.invokeMethod("navigate", uri);
+    await channel.invokeMethod("navigate", uri);
     isRunning = false;
+  }
+
+  Future<void> setUA(String ua) async{
+    var channel = const MethodChannel("flutter_windows_webview");
+    await channel.invokeMethod("setUA", ua);
   }
 }

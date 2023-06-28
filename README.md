@@ -14,7 +14,9 @@ Webview is not supported on all versions of Windows. Use the following code to c
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-print(FlutterWindowsWebview.isAvailable());
+void test(){
+  print(FlutterWindowsWebview.isAvailable());
+}
 ```
 
 ### Create webview
@@ -22,7 +24,9 @@ Run the following code;
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-FlutterWindowsWebview().launchWebview("https://www.google.com");
+void test(){
+  FlutterWindowsWebview().launchWebview("https://www.google.com");
+}
 ```
 Then the webview window will be created.
 
@@ -34,9 +38,11 @@ The following code shows how to run a script:
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-var webview = FlutterWindowsWebview();
-webview.launchWebview("https://www.google.com");
-webview.runScript("alert(\"Hello World\")");
+void test(){
+  var webview = FlutterWindowsWebview();
+  webview.launchWebview("https://www.google.com");
+  webview.runScript("alert(\"Hello World\")");
+}
 ```
 
 #### Sending message from the webview
@@ -44,9 +50,11 @@ You can send a message from the webview:
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-var webview = FlutterWindowsWebview();
-webview.launchWebview("https://www.google.com");
-webview.runScript("window.chrome.webview.postMessage(\"Hello World\")");
+void test(){
+  var webview = FlutterWindowsWebview();
+  webview.launchWebview("https://www.google.com");
+  webview.runScript("window.chrome.webview.postMessage(\"Hello World\")");
+}
 ```
 
 If you want to receive these messages, you need to provide a messageReceiver when creating the webview:
@@ -54,7 +62,9 @@ If you want to receive these messages, you need to provide a messageReceiver whe
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-FlutterWindowsWebview().launchWebview("https://www.google.com", WebviewOptions(messageReceiver: (message) => print(message)));
+void test(){
+  FlutterWindowsWebview().launchWebview("https://www.google.com", WebviewOptions(messageReceiver: (message) => print(message)));
+}
 ```
 
 ## listen title's change
@@ -62,7 +72,9 @@ You need to provide an `onTitleChange` callback when creating the webview:
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-FlutterWindowsWebview().launchWebview("https://www.google.com", WebviewOptions(onTitleChange: (message) => print(message)));
+void test(){
+  FlutterWindowsWebview().launchWebview("https://www.google.com", WebviewOptions(onTitleChange: (message) => print(message)));
+}
 ```
 
 ## cookies
@@ -71,10 +83,12 @@ FlutterWindowsWebview().launchWebview("https://www.google.com", WebviewOptions(o
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-var webview = FlutterWindowsWebview();
-webview.launchWebview("https://www.google.com");
-var res = webview.getCookies("https://www.google.com");
-print(res);
+void test(){
+  var webview = FlutterWindowsWebview();
+  webview.launchWebview("https://www.google.com");
+  var res = webview.getCookies("https://www.google.com");
+  print(res);v
+}
 ```
 
 ## Navigate
@@ -82,16 +96,32 @@ print(res);
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-var webview = FlutterWindowsWebview();
-webview.launchWebview("https://www.google.com");
-webview.navigateTo("https://www.bing.com");
+void test(){
+  var webview = FlutterWindowsWebview();
+  webview.launchWebview("https://www.google.com");
+  webview.navigateTo("https://www.bing.com");
+}
+```
+
+## User-Agent
+
+```dart
+import 'package:flutter_windows_webview/flutter_windows_webview.dart';
+
+void test(){
+  var webview = FlutterWindowsWebview();
+  webview.launchWebview("https://www.google.com");
+  webview.setUA("Flutter Windows Webview");
+}
 ```
 
 ## Close
 ```dart
 import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
-var webview = FlutterWindowsWebview();
-webview.launchWebview("https://www.google.com");
-webview.close();
+void test(){
+  var webview = FlutterWindowsWebview();
+  webview.launchWebview("https://www.google.com");
+  webview.close();
+}
 ```

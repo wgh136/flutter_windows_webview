@@ -84,7 +84,14 @@ namespace flutter_windows_webview {
         } else if (method == "close") {
             Webview::close();
             result->Success(flutter::EncodableValue("success"));
-        }else {
+        }
+        else if (method == "setUA") {
+            auto ua = std::get_if<std::string>(method_call.arguments());
+            auto str = ua->c_str();
+            Webview::setUA(str);
+            result->Success(flutter::EncodableValue("success"));
+        }
+        else {
             result->Success(flutter::EncodableValue("success"));
         }
     }

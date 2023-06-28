@@ -33,5 +33,7 @@ namespace Webview {
     void getCookies(const wchar_t* uri);
 
     void close();
+
+    void setUA(const char* ua);
     
 }

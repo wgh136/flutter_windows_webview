@@ -13,6 +13,7 @@ using namespace Microsoft::WRL;
 namespace Webview {
 wil::com_ptr<ICoreWebView2> webview = nullptr;
 wil::com_ptr<ICoreWebView2Controller> webviewController = nullptr;
+ICoreWebView2Settings* settings = nullptr;
 HWND window = nullptr;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -124,7 +125,6 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
                         // Add a few settings for the webview
                         // The demo step is redundant since the values are the
                         // default settings
-                        wil::com_ptr<ICoreWebView2Settings> settings;
                         webview->get_Settings(&settings);
                         settings->put_IsScriptEnabled(TRUE);
                         settings->put_AreDefaultScriptDialogsEnabled(TRUE);
@@ -264,7 +264,6 @@ void getCookies(const wchar_t* uri) {
                 }
                 else
                 {
-                    result += L"[";
                     for (UINT i = 0; i < cookie_list_size; ++i)
                     {
                         wil::com_ptr<ICoreWebView2Cookie> cookie;
@@ -285,7 +284,6 @@ void getCookies(const wchar_t* uri) {
                             }
                         }
                     }
-                    result += L"]";
                 }
                 const char* convertedValue = flutter_windows_webview::convertWcharToUTF8(result.c_str());
                 sendMessage(convertedValue);
@@ -297,6 +295,13 @@ void getCookies(const wchar_t* uri) {
 void close() {
     if(window != nullptr)
         DestroyWindow(window);
+}
+
+void setUA(const char* ua) {
+    ICoreWebView2Settings2* settings2 = static_cast<ICoreWebView2Settings2*>(settings);
+    std::string str{ua};
+    std::wstring wstr(str.begin(), str.end());
+    settings2->put_UserAgent(wstr.c_str());
 }
 
 }
