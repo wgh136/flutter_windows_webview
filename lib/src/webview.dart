@@ -7,7 +7,7 @@ class Webview{
   ///launch webview
   static void startWebview(String url, [WebviewOptions? options]) async{
     listen(options?.messageReceiver, options?.onTitleChange);
-    const MethodChannel("flutter_windows_webview");
+    const MethodChannel("flutter_windows_webview").invokeMethod("start");
   }
 
   ///listen message from c++
