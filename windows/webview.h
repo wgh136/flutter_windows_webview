@@ -31,5 +31,7 @@ namespace Webview {
     bool isAvailable();
 
     void getCookies(const wchar_t* uri);
+
+    void close();
     
 }

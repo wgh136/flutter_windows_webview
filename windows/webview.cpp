@@ -15,11 +15,6 @@ wil::com_ptr<ICoreWebView2> webview = nullptr;
 wil::com_ptr<ICoreWebView2Controller> webviewController = nullptr;
 HWND window = nullptr;
 
-enum
-{
-    TitleChange,
-};
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
         
@@ -298,4 +293,10 @@ void getCookies(const wchar_t* uri) {
             })
             .Get());
 }
+
+void close() {
+    if(window != nullptr)
+        DestroyWindow(window);
+}
+
 }

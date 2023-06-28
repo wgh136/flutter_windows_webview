@@ -41,9 +41,9 @@ namespace flutter_windows_webview {
         const flutter::MethodCall<flutter::EncodableValue> &method_call,
         std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
         auto method = method_call.method_name();
-        if(method == "isAvailable") {
+        if (method == "isAvailable") {
             result->Success(Webview::isAvailable());
-        }else if(method == "start") {
+        } else if (method == "start") {
             auto url = std::get_if<std::string>(method_call.arguments());
             auto str = url->c_str();
             int len = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
@@ -55,11 +55,11 @@ namespace flutter_windows_webview {
             auto hwnd = Webview::createWindow();
             Webview::createWebview(hwnd, wstr);
             result->Success(flutter::EncodableValue("success"));
-        }else if(method == "script") {
+        } else if (method == "script") {
             auto script = std::get_if<std::string>(method_call.arguments());
             Webview::runScript(script->c_str(), 1234566);
             result->Success(flutter::EncodableValue("success"));
-        }else if(method == "getCookies") {
+        } else if (method == "getCookies") {
             auto url = std::get_if<std::string>(method_call.arguments());
             auto str = url->c_str();
             int len = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
@@ -70,8 +70,23 @@ namespace flutter_windows_webview {
             }
             Webview::getCookies(wstr);
             result->Success(flutter::EncodableValue("success"));
-        }else
+        } else if (method == "navigate") {
+            auto url = std::get_if<std::string>(method_call.arguments());
+            auto str = url->c_str();
+            int len = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
+            auto wstr = new wchar_t[len];
+            if (MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len) == 0) {
+                delete[] wstr;
+                result->Success(flutter::EncodableValue("error"));
+            }
+            Webview::navigateTo(wstr);
             result->Success(flutter::EncodableValue("success"));
+        } else if (method == "close") {
+            Webview::close();
+            result->Success(flutter::EncodableValue("success"));
+        }else {
+            result->Success(flutter::EncodableValue("success"));
+        }
     }
 
 }
