@@ -15,6 +15,7 @@ wil::com_ptr<ICoreWebView2> webview = nullptr;
 wil::com_ptr<ICoreWebView2Controller> webviewController = nullptr;
 ICoreWebView2Settings* settings = nullptr;
 HWND window = nullptr;
+std::wstring user_agent{L""};
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -129,6 +130,10 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
                         settings->put_IsScriptEnabled(TRUE);
                         settings->put_AreDefaultScriptDialogsEnabled(TRUE);
                         settings->put_IsWebMessageEnabled(TRUE);
+                        if (user_agent.size() != 0) {
+                            ICoreWebView2Settings2* settings2 = static_cast<ICoreWebView2Settings2*>(settings);
+                            settings2->put_UserAgent(user_agent.c_str());
+                        }
 
                         // Resize WebView to fit the bounds of the parent window
                         RECT bounds;
@@ -298,10 +303,12 @@ void close() {
 }
 
 void setUA(const char* ua) {
-    ICoreWebView2Settings2* settings2 = static_cast<ICoreWebView2Settings2*>(settings);
     std::string str{ua};
     std::wstring wstr(str.begin(), str.end());
-    settings2->put_UserAgent(wstr.c_str());
+    user_agent = wstr;
+    if (settings != nullptr) {
+        ICoreWebView2Settings2* settings2 = static_cast<ICoreWebView2Settings2*>(settings);
+        settings2->put_UserAgent(wstr.c_str());
+    }
 }
-
 }

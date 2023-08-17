@@ -110,8 +110,8 @@ import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 
 void test(){
   var webview = FlutterWindowsWebview();
-  webview.launchWebview("https://www.google.com");
   webview.setUA("Flutter Windows Webview");
+  webview.launchWebview("https://www.google.com");
 }
 ```
 
