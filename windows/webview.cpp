@@ -5,7 +5,7 @@
 #include "wil/resource.h"
 #include <windows.h>
 #include <wrl.h>
-
+#include <filesystem>
 #include "eventChannel.h"
 
 using namespace Microsoft::WRL;
@@ -93,19 +93,13 @@ void messageHandler(LPCWSTR message, int code) {
 }
 
 void createWebview(HWND hWnd, const wchar_t *initialUri) {
-    const auto path = new wchar_t[256];
-    GetModuleFileNameW(nullptr, path, 256);
-    std::wstring dataPath{path};
-    for(long long i = dataPath.length();i>=0;i--) {
-        if(dataPath[i] == '\\' || dataPath[i]=='/') {
-            dataPath.erase(dataPath.begin()+i, dataPath.end());
-            break;
-        }
-    }
-    dataPath += L"/webview";
-    
+    wchar_t appDataPath[MAX_PATH];
+    GetEnvironmentVariableW(L"APPDATA", appDataPath, MAX_PATH);
+    std::wstring path = std::wstring(appDataPath) + L"\\flutter_windows_webview";
+
+
     CreateCoreWebView2EnvironmentWithOptions(
-        nullptr, dataPath.c_str(), nullptr,
+        nullptr, path.c_str(), nullptr,
         Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
             [hWnd, initialUri](HRESULT result,
                                ICoreWebView2Environment *env) -> HRESULT {
