@@ -28,7 +28,10 @@ class _MyAppState extends State<MyApp> {
               child: FilledButton(
                 child: const Text("1"),
                 onPressed: (){
-                  webview.launchWebview("https://forums.e-hentai.org/index.php?act=Login&CODE=00", WebviewOptions(messageReceiver: (message) => print(message)));
+                  webview.launchWebview("https://google.com", WebviewOptions(onNavigation: (url) {
+                    print(url);
+                    return false;
+                  }));
                 },
               ),
             ),

@@ -22,6 +22,8 @@ list(APPEND PLUGIN_SOURCES
   "WebView2EnvironmentOptions.h"
   "eventChannel.cpp"
   "eventChannel.h"
+  "utils.cpp"
+  "utils.h"
 )
 
 # Define the plugin library target. Its name must not be changed (see comment

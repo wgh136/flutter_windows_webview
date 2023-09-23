@@ -4,11 +4,30 @@ import 'package:flutter_windows_webview/src/webview_options.dart';
 class FlutterWindowsWebview{
   static void Function(String)? cookieListener;
   bool isRunning = false;
+  WebviewOptions? _options;
+  static const channel = MethodChannel("flutter_windows_webview");
+
+  Future<dynamic> _handleMethodCall(MethodCall call) async{
+    switch(call.method){
+      case "navigation": return _handleNavigation(call);
+      default: throw UnimplementedError(call.method);
+    }
+  }
+
+  bool _handleNavigation(MethodCall call){
+    if(call.arguments is String){
+      var res = _options?.onNavigation?.call(call.arguments) ?? false;
+      return res;
+    }
+    return false;
+  }
 
   ///launch webview
   void launchWebview(String url, [WebviewOptions? options]) async{
+    _options = options;
     _listen(options?.messageReceiver, options?.onTitleChange);
-    const MethodChannel("flutter_windows_webview").invokeMethod("start", url);
+    channel.setMethodCallHandler(_handleMethodCall);
+    channel.invokeMethod("start", url);
     isRunning = true;
   }
 
@@ -40,7 +59,6 @@ class FlutterWindowsWebview{
 
   ///confirm webview is available
   static Future<bool> isAvailable() async{
-    var channel = const MethodChannel("flutter_windows_webview");
     var res = await channel.invokeMethod("isAvailable");
     return res;
   }
@@ -48,7 +66,6 @@ class FlutterWindowsWebview{
   ///run script
   void runScript(String script) async{
     if(!isRunning)  throw Exception("Webview is not running");
-    var channel = const MethodChannel("flutter_windows_webview");
     await channel.invokeMethod("script", script);
   }
 
@@ -60,7 +77,6 @@ class FlutterWindowsWebview{
     }
     String? cookies;
     cookieListener = (cookie) => cookies = cookie;
-    var channel = const MethodChannel("flutter_windows_webview");
     await channel.invokeMethod("getCookies", uri);
     while(cookies == null){
       await Future.delayed(const Duration(milliseconds: 50));
@@ -86,20 +102,17 @@ class FlutterWindowsWebview{
 
   Future<void> close() async{
     if(!isRunning)  throw Exception("Webview is not running");
-    var channel = const MethodChannel("flutter_windows_webview");
     await channel.invokeMethod("close");
     isRunning = false;
   }
 
   Future<void> navigateTo(String uri) async{
     if(!isRunning)  throw Exception("Webview is not running");
-    var channel = const MethodChannel("flutter_windows_webview");
     await channel.invokeMethod("navigate", uri);
     isRunning = false;
   }
 
   Future<void> setUA(String ua) async{
-    var channel = const MethodChannel("flutter_windows_webview");
     await channel.invokeMethod("setUA", ua);
   }
 }

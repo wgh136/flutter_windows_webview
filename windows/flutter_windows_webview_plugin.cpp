@@ -28,6 +28,8 @@ namespace flutter_windows_webview {
             [plugin_pointer = plugin.get()](const auto &call, auto result) {
               plugin_pointer->HandleMethodCall(call, std::move(result));
         });
+
+        Webview::setMethodChannel(std::move(channel2));
         
 
       registrar->AddPlugin(std::move(plugin));

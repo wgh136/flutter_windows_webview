@@ -8,10 +8,8 @@
 #include <flutter/plugin_registrar_windows.h>
 #include <memory>
 #include <flutter/standard_method_codec.h>
-#include <string>
 
 namespace flutter_windows_webview {
-
     inline char* convertWcharToUTF8(const wchar_t* str)
     {
         int wideStrLen = static_cast<int>(wcslen(str) + 1);

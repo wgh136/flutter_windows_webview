@@ -11,6 +11,11 @@ class WebviewOptions{
   ///listen document's title change
   void Function(String)? onTitleChange;
 
+  /// callback when webview try to navigate to another page,
+  /// return true to prevent navigation.
+  bool Function(String url)? onNavigation;
+
   /// Webview creating options
-  WebviewOptions({this.width, this.height, this.messageReceiver, this.onTitleChange});
+  WebviewOptions({this.width, this.height, this.messageReceiver,
+    this.onNavigation, this.onTitleChange});
 }

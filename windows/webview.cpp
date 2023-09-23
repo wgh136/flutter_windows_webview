@@ -7,6 +7,9 @@
 #include <wrl.h>
 #include <filesystem>
 #include "eventChannel.h"
+#include <flutter/method_channel.h>
+#include "utils.h"
+#include <future>
 
 using namespace Microsoft::WRL;
 
@@ -16,6 +19,36 @@ wil::com_ptr<ICoreWebView2Controller> webviewController = nullptr;
 ICoreWebView2Settings* settings = nullptr;
 HWND window = nullptr;
 std::wstring user_agent{L""};
+std::unique_ptr<flutter::MethodChannel<>> methodChannel = nullptr;
+
+class WebviewMethodChannelResult : public flutter::MethodResult<flutter::EncodableValue> {
+public:
+    typedef std::function<void(const flutter::EncodableValue*)> SuccessCallback;
+
+    SuccessCallback success_callback_;
+
+    WebviewMethodChannelResult(SuccessCallback callback)  : success_callback_(std::move(callback)) {}
+
+    ~WebviewMethodChannelResult() = default;
+
+    void SuccessInternal(const flutter::EncodableValue* result) override {
+        success_callback_(result);
+    }
+
+    void ErrorInternal(const std::string& error_code,
+        const std::string& error_message,
+        const flutter::EncodableValue* error_details) override {
+        OutputDebugStringA((error_code + error_message).c_str());
+        auto value = flutter::EncodableValue{ false };
+        success_callback_(&value);
+    }
+
+    void NotImplementedInternal() override {
+        OutputDebugString(L"no implement");
+        auto value = flutter::EncodableValue{ false };
+        success_callback_(&value);
+    }
+};
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -134,7 +167,6 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
                         GetClientRect(hWnd, &bounds);
                         webviewController->put_Bounds(bounds);
 
-                        // Schedule an async task to navigate to Bing
                         webview->Navigate(initialUri);
                           delete[] initialUri;
                         EventRegistrationToken token;
@@ -183,13 +215,27 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
                                    webview->add_WebMessageReceived(
                                       callback.Get(),
                                       &token);
-                                  return S_OK;
                               }
+                              EventRegistrationToken m_navigationStartingToken;
+
+                              webview->add_NavigationStarting(
+                                  Callback<ICoreWebView2NavigationStartingEventHandler>(
+                                      [](ICoreWebView2* sender, ICoreWebView2NavigationStartingEventArgs* args)
+                                      -> HRESULT {
+                                          wil::unique_cotaskmem_string uri;
+                                          args->get_Uri(&uri);
+
+                                          if (shouldBlockUri(uri.get()))
+                                          {
+                                              args->put_Cancel(true);
+                                          }
+                                          return S_OK;
+                                      }) .Get(), &m_navigationStartingToken);
+                              return S_OK;
                           }
                           catch (...) {
                               return S_FALSE;
                           }
-                          return S_FALSE;
                       })
                       .Get());
               return S_OK;
@@ -304,5 +350,33 @@ void setUA(const char* ua) {
         ICoreWebView2Settings2* settings2 = static_cast<ICoreWebView2Settings2*>(settings);
         settings2->put_UserAgent(wstr.c_str());
     }
+}
+
+void setMethodChannel(std::unique_ptr<flutter::MethodChannel<>> channel)
+{
+    methodChannel = std::move(channel);
+}
+
+bool waitingForChecking = false;
+
+bool shouldBlockUri(std::wstring uri) {
+    if (waitingForChecking) {
+        waitingForChecking = false;
+        return false;
+    }
+    auto value = std::make_unique<flutter::EncodableValue>(flutter::EncodableValue{ flutter_windows_webview_utils::wstringToString(uri) });
+
+    waitingForChecking = true;
+    methodChannel->InvokeMethod(std::string{ "navigation" }, std::move(value), std::make_unique<WebviewMethodChannelResult>([uri](const flutter::EncodableValue* result) {
+        bool block = std::get<bool>(*result);
+        if (!block) {
+            webview->Navigate(uri.c_str());
+        }
+        else {
+            waitingForChecking = false;
+        }
+     }));
+
+    return true;
 }
 }

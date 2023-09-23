@@ -35,5 +35,9 @@ namespace Webview {
     void close();
 
     void setUA(const char* ua);
+
+    void setMethodChannel(std::unique_ptr<flutter::MethodChannel<>> channel);
+
+    bool shouldBlockUri(std::wstring uri);
     
 }
