@@ -217,6 +217,21 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
                                       &token);
                               }
                               EventRegistrationToken m_navigationStartingToken;
+                              EventRegistrationToken m_navigationStartingToken2;
+
+                              webview->add_NewWindowRequested(
+                                  Callback<ICoreWebView2NewWindowRequestedEventHandler>(
+                                      [](ICoreWebView2* sender, ICoreWebView2NewWindowRequestedEventArgs* args)
+                                      -> HRESULT {
+                                          wil::unique_cotaskmem_string uri;
+
+                                          args->get_Uri(&uri);
+
+                                          args->put_Handled(shouldBlockNewWindow(uri.get()));
+
+                                          return S_OK;
+                                      }).Get(), &m_navigationStartingToken2
+                              );
 
                               webview->add_NavigationStarting(
                                   Callback<ICoreWebView2NavigationStartingEventHandler>(
@@ -386,6 +401,28 @@ bool shouldBlockUri(std::wstring uri) {
             waitingForChecking = false;
         }
      }));
+
+    return true;
+}
+
+bool shouldBlockNewWindow(std::wstring uri) {
+    if (waitingForChecking) {
+        waitingForChecking = false;
+        return false;
+    }
+    auto value = std::make_unique<flutter::EncodableValue>(flutter::EncodableValue{ flutter_windows_webview_utils::wstringToString(uri) });
+
+    waitingForChecking = true;
+    methodChannel->InvokeMethod(std::string{ "navigation" }, std::move(value), std::make_unique<WebviewMethodChannelResult>([uri](const flutter::EncodableValue* result) {
+        bool block = std::get<bool>(*result);
+        if (!block) {
+            auto js = std::wstring{ L"window.open(\"" } + uri + std::wstring{ L"\", \"_blank\")" };
+            webview->ExecuteScript(js.c_str(), nullptr);
+        }
+        else {
+            waitingForChecking = false;
+        }
+        }));
 
     return true;
 }

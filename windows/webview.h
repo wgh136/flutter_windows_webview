@@ -39,5 +39,7 @@ namespace Webview {
     void setMethodChannel(std::unique_ptr<flutter::MethodChannel<>> channel);
 
     bool shouldBlockUri(std::wstring uri);
+
+    bool shouldBlockNewWindow(std::wstring uri);
     
 }
