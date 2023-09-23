@@ -223,6 +223,16 @@ void createWebview(HWND hWnd, const wchar_t *initialUri) {
                                       [](ICoreWebView2* sender, ICoreWebView2NavigationStartingEventArgs* args)
                                       -> HRESULT {
                                           wil::unique_cotaskmem_string uri;
+                                          ICoreWebView2HttpRequestHeaders *headers;
+                                          args->get_RequestHeaders(&headers);
+
+                                          LPWSTR value;
+                                          headers->GetHeader(L"Content-Type", &value);
+                                          if(value != NULL){
+                                              CoTaskMemFree(value);
+                                              return S_OK;
+                                          }
+                                          
                                           args->get_Uri(&uri);
 
                                           if (shouldBlockUri(uri.get()))
