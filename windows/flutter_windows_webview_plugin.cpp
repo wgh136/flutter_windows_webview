@@ -72,6 +72,42 @@ namespace flutter_windows_webview {
             }
             Webview::getCookies(wstr);
             result->Success(flutter::EncodableValue("success"));
+        }else if(method == "setCookie"){
+            auto args = std::get_if<flutter::EncodableMap>(method_call.arguments());
+            auto name = std::get<std::string>(args->at(flutter::EncodableValue("name")));
+            auto value = std::get<std::string>(args->at(flutter::EncodableValue("value")));
+            auto domain = std::get<std::string>(args->at(flutter::EncodableValue("domain")));
+            auto path = std::get<std::string>(args->at(flutter::EncodableValue("path")));
+            auto wname = name.c_str();
+            auto wvalue = value.c_str();
+            auto wdomain = domain.c_str();
+            auto wpath = path.c_str();
+            int len = MultiByteToWideChar(CP_UTF8, 0, wname, -1, nullptr, 0);
+            auto wstr = new wchar_t[len];
+            if (MultiByteToWideChar(CP_UTF8, 0, wname, -1, wstr, len) == 0) {
+                delete[] wstr;
+                result->Success(flutter::EncodableValue("error"));
+            }
+            int len2 = MultiByteToWideChar(CP_UTF8, 0, wvalue, -1, nullptr, 0);
+            auto wstr2 = new wchar_t[len2];
+            if (MultiByteToWideChar(CP_UTF8, 0, wvalue, -1, wstr2, len2) == 0) {
+                delete[] wstr2;
+                result->Success(flutter::EncodableValue("error"));
+            }
+            int len3 = MultiByteToWideChar(CP_UTF8, 0, wdomain, -1, nullptr, 0);
+            auto wstr3 = new wchar_t[len3];
+            if (MultiByteToWideChar(CP_UTF8, 0, wdomain, -1, wstr3, len3) == 0) {
+                delete[] wstr3;
+                result->Success(flutter::EncodableValue("error"));
+            }
+            int len4 = MultiByteToWideChar(CP_UTF8, 0, wpath, -1, nullptr, 0);
+            auto wstr4 = new wchar_t[len4];
+            if (MultiByteToWideChar(CP_UTF8, 0, wpath, -1, wstr4, len4) == 0) {
+                delete[] wstr4;
+                result->Success(flutter::EncodableValue("error"));
+            }
+            Webview::setCookie(wstr, wstr2, wstr3, wstr4);
+            result->Success(flutter::EncodableValue("success"));
         } else if (method == "navigate") {
             auto url = std::get_if<std::string>(method_call.arguments());
             auto str = url->c_str();
