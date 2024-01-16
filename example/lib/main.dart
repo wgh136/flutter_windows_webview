@@ -27,9 +27,10 @@ class _MyAppState extends State<MyApp> {
             Center(
               child: FilledButton(
                 child: const Text("1"),
-                onPressed: (){
-                  webview.launchWebview("https://google.com", WebviewOptions(onNavigation: (url) {
-                    print(url);
+                onPressed: () {
+                  webview.launchWebview("https://google.com",
+                      WebviewOptions(onNavigation: (url) {
+                    debugPrint(url);
                     return false;
                   }));
                 },
@@ -38,8 +39,21 @@ class _MyAppState extends State<MyApp> {
             Center(
               child: FilledButton(
                 child: const Text("2"),
-                onPressed: () async{
-                  print(await webview.getCookies("https://e-hentai.org"));
+                onPressed: () async {
+                  debugPrint(
+                      '${await webview.getCookies("https://google.com")}');
+                },
+              ),
+            ),
+            Center(
+              child: FilledButton(
+                child: const Text("3"),
+                onPressed: () async {
+                  await webview.setCookie(
+                    name: "test",
+                    value: "hello",
+                    domain: ".google.com",
+                  );
                 },
               ),
             ),
