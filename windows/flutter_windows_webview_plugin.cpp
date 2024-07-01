@@ -4,6 +4,7 @@
 #include <memory>
 #include "webview.h"
 #include "eventChannel.h"
+#include "utils.h"
 
 namespace flutter_windows_webview {
 
@@ -46,16 +47,11 @@ namespace flutter_windows_webview {
         if (method == "isAvailable") {
             result->Success(Webview::isAvailable());
         } else if (method == "start") {
-            auto url = std::get_if<std::string>(method_call.arguments());
-            auto str = url->c_str();
-            int len = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
-            auto wstr = new wchar_t[len];
-            if (MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len) == 0) {
-                delete[] wstr;
-                result->Success(flutter::EncodableValue("error"));
-            }
+            auto params = std::get<flutter::EncodableList>(*method_call.arguments());
+            auto url = flutter_windows_webview_utils::stringToWstring(std::get<std::string>(params[0]));
+            auto proxy = flutter_windows_webview_utils::stringToWstring(std::get<std::string>(params[1]));
             auto hwnd = Webview::createWindow();
-            Webview::createWebview(hwnd, wstr);
+            Webview::createWebview(hwnd, url, proxy);
             result->Success(flutter::EncodableValue("success"));
         } else if (method == "script") {
             auto script = std::get_if<std::string>(method_call.arguments());

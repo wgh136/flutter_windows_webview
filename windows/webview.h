@@ -20,7 +20,7 @@ namespace Webview {
 
     void messageHandler(LPCWSTR message, int code);
 
-    void createWebview(HWND hWnd, const wchar_t *initialUri);
+    void createWebview(HWND hWnd, std::wstring initialUri, std::wstring proxy);
 
     void runScript(const char *script, int code);
 

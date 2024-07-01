@@ -19,4 +19,18 @@ namespace flutter_windows_webview_utils {
         delete[] newCStr;
         return newStr;
 	}
+
+    wchar_t* convertUTF8ToWchar(const char* str) {
+        int len = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
+        auto wstr = new wchar_t[len];
+        MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len);
+        return wstr;
+    }
+
+    std::wstring stringToWstring(std::string str) {
+        auto newCWstr = convertUTF8ToWchar(str.c_str());
+        auto newWstr = std::wstring{ newCWstr };
+        delete[] newCWstr;
+        return newWstr;
+    }
 }

@@ -25,20 +25,37 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: [
             Center(
-              child: FilledButton(
-                child: const Text("1"),
+              child: TextButton(
+                child: const Text("open webview"),
                 onPressed: () {
                   webview.launchWebview("https://google.com",
-                      WebviewOptions(onNavigation: (url) {
-                    debugPrint(url);
-                    return false;
-                  }));
+                    WebviewOptions(
+                      onNavigation: (url) {
+                        debugPrint(url);
+                        return false;
+                      },
+                    ));
                 },
               ),
             ),
             Center(
-              child: FilledButton(
-                child: const Text("2"),
+              child: TextButton(
+                child: const Text("open webview with proxy"),
+                onPressed: () {
+                  webview.launchWebview("https://google.com",
+                      WebviewOptions(
+                          onNavigation: (url) {
+                            debugPrint(url);
+                            return false;
+                          },
+                          proxy: "198.18.0.1:9000"
+                      ));
+                },
+              ),
+            ),
+            Center(
+              child: TextButton(
+                child: const Text("get cookies"),
                 onPressed: () async {
                   debugPrint(
                       '${await webview.getCookies("https://google.com")}');
@@ -46,8 +63,8 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             Center(
-              child: FilledButton(
-                child: const Text("3"),
+              child: TextButton(
+                child: const Text("set cookie"),
                 onPressed: () async {
                   await webview.setCookie(
                     name: "test",

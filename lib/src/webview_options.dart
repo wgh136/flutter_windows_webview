@@ -15,7 +15,10 @@ class WebviewOptions{
   /// return true to prevent navigation.
   bool Function(String url)? onNavigation;
 
+  /// set http proxy for webview as format "domain:port"
+  String? proxy;
+
   /// Webview creating options
   WebviewOptions({this.width, this.height, this.messageReceiver,
-    this.onNavigation, this.onTitleChange});
+    this.onNavigation, this.onTitleChange, this.proxy});
 }

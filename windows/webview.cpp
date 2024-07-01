@@ -10,6 +10,7 @@
 #include <flutter/method_channel.h>
 #include "utils.h"
 #include <future>
+#include "WebView2EnvironmentOptions.h"
 
 using namespace Microsoft::WRL;
 
@@ -132,16 +133,27 @@ namespace Webview
         // TODO
     }
 
-    void createWebview(HWND hWnd, const wchar_t *initialUri)
+    void createWebview(HWND hWnd, std::wstring initialUri, std::wstring proxy)
     {
         wchar_t appDataPath[MAX_PATH];
         GetEnvironmentVariableW(L"APPDATA", appDataPath, MAX_PATH);
+        auto _initialUri = new wchar_t[initialUri.size() + 1];
+        memcpy(_initialUri, initialUri.c_str(), initialUri.size() * sizeof(wchar_t));
+        _initialUri[initialUri.size()] = L'\0';
+        proxy = (std::wstring(L"--proxy-server=") + proxy);
+        auto _proxy = new wchar_t[proxy.size() + 1];
+        memcpy(_proxy, proxy.c_str(), proxy.length() * sizeof(wchar_t));
+        _proxy[proxy.size()] = L'\0';
         std::wstring path = std::wstring(appDataPath) + L"\\flutter_windows_webview";
+        auto options = Microsoft::WRL::Make<CoreWebView2EnvironmentOptions>();
+        if (proxy.size()) {
+            options->put_AdditionalBrowserArguments(_proxy);
+        }
 
         CreateCoreWebView2EnvironmentWithOptions(
-            nullptr, path.c_str(), nullptr,
+            nullptr, path.c_str(), options.Get(),
             Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
-                [hWnd, initialUri](HRESULT result,
+                [hWnd, _initialUri](HRESULT result,
                                    ICoreWebView2Environment *env) -> HRESULT
                 {
                     // Create a CoreWebView2Controller and get the associated
@@ -150,7 +162,7 @@ namespace Webview
                         hWnd,
                         Callback<
                             ICoreWebView2CreateCoreWebView2ControllerCompletedHandler>(
-                            [hWnd, initialUri](
+                            [hWnd, _initialUri](
                                 HRESULT result,
                                 ICoreWebView2Controller *controller) -> HRESULT
                             {
@@ -178,8 +190,8 @@ namespace Webview
                                 GetClientRect(hWnd, &bounds);
                                 webviewController->put_Bounds(bounds);
 
-                                webview->Navigate(initialUri);
-                                delete[] initialUri;
+                                webview->Navigate(_initialUri);
+                                delete[] _initialUri;
                                 EventRegistrationToken token;
                                 webview->AddScriptToExecuteOnDocumentCreated(
                                     L"window.onload = function(){"

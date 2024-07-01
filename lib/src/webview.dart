@@ -29,7 +29,7 @@ class FlutterWindowsWebview {
     _options = options;
     _listen(options?.messageReceiver, options?.onTitleChange);
     channel.setMethodCallHandler(_handleMethodCall);
-    channel.invokeMethod("start", url);
+    channel.invokeMethod("start", [url, options?.proxy ?? ""]);
     isRunning = true;
   }
 
