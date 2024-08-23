@@ -22,6 +22,8 @@ namespace Webview
     HWND window = nullptr;
     std::wstring user_agent{L""};
     std::unique_ptr<flutter::MethodChannel<>> methodChannel = nullptr;
+    EventRegistrationToken messageReceiveToken;
+    EventRegistrationToken documentTitleChangedToken;
 
     class WebviewMethodChannelResult : public flutter::MethodResult<flutter::EncodableValue>
     {
@@ -192,13 +194,23 @@ namespace Webview
 
                                 webview->Navigate(_initialUri);
                                 delete[] _initialUri;
-                                EventRegistrationToken token;
-                                webview->AddScriptToExecuteOnDocumentCreated(
-                                    L"window.onload = function(){"
-                                    "window.chrome.webview.postMessage(\"/r8A7g5E8dTitle\"+window.document."
-                                    "title);"
-                                    "}",
-                                    nullptr);
+                               
+                                documentTitleChangedToken = EventRegistrationToken{};
+                                webview->add_DocumentTitleChanged(
+                                    Callback<ICoreWebView2DocumentTitleChangedEventHandler>(
+                                        [hWnd](ICoreWebView2* sender, IUnknown* args) -> HRESULT {
+                                            wil::unique_cotaskmem_string title;
+                                            sender->get_DocumentTitle(&title);
+                                            wchar_t* t = title.get();
+                                            std::wstring s = TitleFlag;
+                                            s += t;
+                                            sendMessage(s.c_str());
+                                            SetWindowText(hWnd, t);
+                                            return S_OK;
+                                        })
+                                    .Get(),
+                                    &documentTitleChangedToken
+                                );
                                 try
                                 {
                                     const auto callback = Callback<
@@ -209,44 +221,15 @@ namespace Webview
                                             LPWSTR message;
                                             args->TryGetWebMessageAsString(&message);
                                             sendMessage(message);
-                                            const wchar_t *flag = TitleFlag;
-                                            bool changeTitle = true;
-                                            for (int i = 0; i < 15; i++)
-                                            {
-                                                if (message[i] == '\0')
-                                                {
-                                                    changeTitle = false;
-                                                    break;
-                                                }
-                                                if (message[i] != flag[i])
-                                                {
-                                                    changeTitle = false;
-                                                    break;
-                                                }
-                                            }
-                                            if (changeTitle)
-                                            {
-                                                int length = 0;
-                                                while (message[length] != '\0')
-                                                {
-                                                    length++;
-                                                }
-                                                wchar_t *title = new wchar_t[length - 5];
-                                                for (int i = 15; i < length + 1; i++)
-                                                {
-                                                    title[i - 15] = message[i];
-                                                }
-                                                SetWindowText(hWnd, title);
-                                                delete[] title;
-                                            }
                                             webview1->PostWebMessageAsString(message);
                                             return S_OK;
                                         });
                                     if (callback != nullptr)
                                     {
+                                        messageReceiveToken = EventRegistrationToken{};
                                         webview->add_WebMessageReceived(
                                             callback.Get(),
-                                            &token);
+                                            &messageReceiveToken);
                                     }
                                     EventRegistrationToken m_navigationStartingToken;
                                     EventRegistrationToken m_navigationStartingToken2;
